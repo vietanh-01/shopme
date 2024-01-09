@@ -17,7 +17,7 @@ import com.shopme.common.entity.User;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Rollback(false)
+@Rollback(value = false)
 public class UserRepositoryTests {
 	@Autowired
 	private UserRepository repo;
@@ -90,4 +90,31 @@ public class UserRepositoryTests {
 		repo.deleteById(userId);
 		
 	}
+
+	@Test
+	public void testGetUserByEmail() {
+		String email = "havietanh24092002@gmail.com";
+		User user = repo.getUserByEmail(email);
+		assertThat(user).isNotNull();
+	}
+
+	@Test
+	public void testCountById() {
+		Integer id = 1;
+		Long countById = repo.countById(id);
+		assertThat(countById).isNotNull().isGreaterThan(0);
+	}
+
+	@Test
+	public void testDisableUser() {
+		Integer id = 1;
+		repo.updateEnabledStatus(id, false);
+	}
+
+	@Test
+	public void tesEnableUser() {
+		Integer id = 1;
+		repo.updateEnabledStatus(id, true);
+	}
+
 }
