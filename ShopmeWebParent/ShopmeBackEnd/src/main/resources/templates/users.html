@@ -75,21 +75,88 @@
   <div>
     <table class="table table-bordered table-striped table-hover table-responsive-xl">
       <thead class="thead-dark">
-      <tr>
-        <th>User ID</th>
-        <th>Photos</th>
-        <th>E-mail</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Roles</th>
-        <th>Enabled</th>
-        <th></th>
-      </tr>
+          <tr>
+            <th>
+              <a th:if="${sortField != 'id'}" class="text-white"
+                 th:href="@{'/users/page/' + ${currentPage} + '?sortField=id&sortDir=' + ${sortDir}}">
+                User ID
+              </a>
+              <a th:if="${sortField == 'id'}" class="text-white"
+                 th:href="@{'/users/page/' + ${currentPage} + '?sortField=id&sortDir=' + ${reverseSortDir}}">
+                User ID
+              </a>
+              <span th:if="${sortField == 'id'}"
+                    th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+            </th>
+
+            <th>Photos</th>
+
+            <th>
+              <a th:if="${sortField != 'email'}" class="text-white"
+                 th:href="@{'/users/page/' + ${currentPage} + '?sortField=email&sortDir=' + ${sortDir}}">
+                E-mail
+              </a>
+              <a th:if="${sortField == 'email'}" class="text-white"
+                 th:href="@{'/users/page/' + ${currentPage} + '?sortField=email&sortDir=' + ${reverseSortDir}}">
+                E-mail
+              </a>
+
+              <span th:if="${sortField == 'email'}"
+                    th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}" ></span>
+            </th>
+
+            <th>
+              <a th:if="${sortField != 'firstName'}" class="text-white"
+                th:href="@{'/users/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${sortDir}}">
+                First Name
+              </a>
+              <a th:if="${sortField == 'firstName'}" class="text-white"
+                 th:href="@{'/users/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}">
+                First Name
+              </a>
+              <span th:if="${sortField == 'firstName'}"
+              th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+            </th>
+
+            <th>
+              <a th:if="${sortField != 'lastName'}" class="text-white"
+                 th:href="@{'/users/page/' + ${currentPage} + '?sortField=lastName&sortDir=' + ${sortDir}}">
+                Last Name
+              </a>
+              <a th:if="${sortField == 'lastName'}" class="text-white"
+                 th:href="@{'/users/page/' + ${currentPage} + '?sortField=lastName&sortDir=' + ${reverseSortDir}}">
+                Last Name
+              </a>
+              <span th:if="${sortField == 'lastName'}"
+                    th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+            </th>
+
+            <th>
+              <a th:if="${sortField != 'roles'}" class="text-white"
+                 th:href="@{'/users/page/' + ${currentPage} + '?sortField=roles&sortDir=' + ${sortDir}}">
+                Roles
+              </a>
+              <a th:if="${sortField == 'roles'}" class="text-white"
+                 th:href="@{'/users/page/' + ${currentPage} + '?sortField=roles&sortDir=' + ${reverseSortDir}}">
+                Roles
+              </a>
+
+              <span th:if="${sortField == 'roles'}"
+                    th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}" ></span>
+            </th>
+
+            <th>Enabled</th>
+            <th></th>
+          </tr>
       </thead>
       <tbody>
       <tr th:each="user : ${listUsers}">
         <td>[[${user.id}]]</td>
-        <td><span class="fas fa-portrait fa-3x icon-silver"></span></td>
+        <td>
+          <span th:if="${user.photos == null}" class="fas fa-portrait fa-3x icon-silver"></span>
+          <img th:if="${user.photos != null}" th:src="@{${user.getPhotosImagePath}}"
+            style="width: 100px"/>
+        </td>
         <td>[[${user.email}]]</td>
         <td>[[${user.firstName}]]</td>
         <td>[[${user.lastName}]]</td>
@@ -117,6 +184,72 @@
     </table>
   </div>
 
+<!--  <div class="text-center m-1" th:if="${totalItems > 0}">-->
+<!--    <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>-->
+<!--  </div>-->
+  <div class="text-center m-1" th:unless="${totalItems > 0}">
+    <span>No users found</span>
+  </div>
+
+
+    <!--Pagination-->
+  <div th:if="${totalItems > 0}">
+    <nav>
+      <ul class="pagination justify-content-center">
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a class="page-link" th:href="@{'/users/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">First</a>
+        </li>
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a class="page-link" th:href="@{'/users/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Previous</a>
+        </li>
+
+        <th:block th:if="${totalPages <= 5}">
+        <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+            th:each="i : ${#numbers.sequence(1, totalPages)}">
+          <a class="page-link" th:href="@{'/users/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+        </li>
+        </th:block>
+
+        <th:block th:if="${totalPages > 5}">
+          <th:block th:if="${currentPage <= 3 || currentPage > totalPages - 2}">
+              <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+                  th:each="i : ${#numbers.sequence(1, 3)}">
+                <a class="page-link" th:href="@{'/users/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+              </li>
+
+              <a class="page-link" th:href="@{'/users/page/4?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} }">...</a>
+
+              <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+                  th:each="i : ${#numbers.sequence(totalPages - 2, totalPages)}">
+                <a class="page-link" th:href="@{'/users/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+              </li>
+          </th:block>
+
+          <th:block th:if="${currentPage > 3 && currentPage <= totalPages - 2}">
+              <a class="page-link" th:href="@{'/users/page/' + ${currentPage - 3} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">...</a>
+
+              <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+                  th:each="i : ${#numbers.sequence(currentPage - 2, currentPage + 1)}">
+                <a class="page-link" th:href="@{'/users/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+              </li>
+
+              <a class="page-link" th:href="@{'/users/page/' + ${currentPage + 2} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">...</a>
+          </th:block>
+
+
+        </th:block>
+
+        <li th:class="${currentPage != totalPages ? 'page-item' : 'page-item disabled'}">
+          <a class="page-link" th:href="@{'/users/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+        </li>
+        <li th:class="${currentPage != totalPages ? 'page-item' : 'page-item disabled'}">
+          <a class="page-link" th:href="@{'/users/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+
   <div class="modal fade text-center" id="confirmModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -137,9 +270,9 @@
     </div>
   </div>
 
-  <div class="text-center">
-    <p>Shopme Control Panel - Copyright &copy; Shopme</p>
-  </div>
+<!--  <div class="text-center">-->
+<!--    <p>Shopme Control Panel - Copyright &copy; Shopme</p>-->
+<!--  </div>-->
 
 </div>
 <script type="text/javascript">

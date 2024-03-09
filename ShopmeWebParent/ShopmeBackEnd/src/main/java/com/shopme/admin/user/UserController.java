@@ -4,6 +4,8 @@ import com.shopme.admin.FileUploadUtil;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -24,10 +26,8 @@ public class UserController {
     private UserService service;
 
     @GetMapping("/users")
-    public String listAll(Model model) {
-        List<User> userList = service.listAll();
-        model.addAttribute("listUsers", userList);
-        return "users";
+    public String listFirstPage(Model model) {
+        return listByPgae(1, model, "firstName", "asc", null);
     }
 
     @GetMapping("/users/new")
@@ -43,19 +43,59 @@ public class UserController {
         return "user_form";
     }
 
+    //get users in first page
+    @GetMapping("/users/page/{pageNum}")
+    public String listByPgae(
+            @PathVariable("pageNum") int pageNum, Model model,
+            @Param("sortField") String sortField, @Param("sortDir") String sortDir,
+            @Param("keyword") String keyword
+    ) {
+        Page<User> page = service.listByPage(pageNum, sortField, sortDir, keyword);
+        List<User> userList = page.getContent();
+
+        long startCount = (pageNum - 1) * UserService.USER_PER_PAGE + 1;
+        long endCount = startCount + UserService.USER_PER_PAGE - 1;
+        if(endCount > page.getTotalElements()) {
+            endCount = page.getTotalElements();
+        }
+
+        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listUsers", userList);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", reverseSortDir);
+        model.addAttribute("keyword", keyword);
+
+        return "users";
+    }
+
     @PostMapping("/users/save")
     public String saveUser(User user, RedirectAttributes redirectAttributes,
-                           @RequestParam("image")MultipartFile multipartFile) throws IOException {
-        System.out.println(user);
-        System.out.println(multipartFile.getOriginalFilename());
+                           @RequestParam("image") MultipartFile multipartFile) throws IOException {
+//        System.out.println(user);
+//        System.out.println(multipartFile.getOriginalFilename());
+        if(!multipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            user.setPhotos(fileName);
 
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            User savedUser = service.save(user);
 
-        String uploadDir = "user-photos";
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            String uploadDir = "user-photos/" + savedUser.getId();
+            FileUploadUtil.cleanDir(uploadDir);
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        }
+        else {
+            if(user.getPhotos().isEmpty()) user.setPhotos(null);
+            service.save(user);
+        }
 
-        //service.save(user);
-        //redirectAttributes.addFlashAttribute("message", "The user has been saved successfully!");
+        redirectAttributes.addFlashAttribute("message", "The user has been saved successfully!");
         return "redirect:/users";
     }
 

@@ -3,6 +3,10 @@ package com.shopme.admin.user;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +18,8 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 public class UserService {
+
+    public static final int USER_PER_PAGE = 4;
 
     @Autowired
     private UserRepository userRepository;
@@ -31,7 +37,7 @@ public class UserService {
         return (List<Role>) roleRepository.findAll();
     }
 
-    public void save(User user) {
+    public User save(User user) {
         boolean checkUpdating = (user.getId() != null);
         if(checkUpdating) {
             User existingUser = userRepository.findById(user.getId()).get();
@@ -41,10 +47,23 @@ public class UserService {
             else encodePassword(user);
         }
         else encodePassword(user);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
+    public Page<User> listByPage(int pageNum, String sortField, String sortDir, String keyword) {
 
+        Sort sort = Sort.by(sortField);
+
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+
+        Pageable pageable = PageRequest.of(pageNum - 1, USER_PER_PAGE, sort);
+
+        if(keyword != null) {
+            return userRepository.findAll(keyword, pageable);
+        }
+
+        return userRepository.findAll(pageable);
+    }
 
     public void encodePassword(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());

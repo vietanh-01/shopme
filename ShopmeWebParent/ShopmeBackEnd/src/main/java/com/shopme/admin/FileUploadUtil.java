@@ -14,7 +14,7 @@ public class FileUploadUtil {
 	public static void saveFile(String uploadDir, String fileName, 
 			MultipartFile multipartFile) throws IOException {
 		Path uploadPath = Paths.get(uploadDir);
-		if(Files.exists(uploadPath)) {
+		if(!Files.exists(uploadPath)) {
 			Files.createDirectories(uploadPath);
 		}
 		try(InputStream inputStream = multipartFile.getInputStream()) {
@@ -24,22 +24,23 @@ public class FileUploadUtil {
 			throw new IOException("Could not save file: " + fileName, e);
 		}
 	}
-	
-//	public static void cleanDir(String dir) {
-//		Path dirPath = Paths.get(dir);
-//
-//		try {
-//			Files.list(dirPath).forEach(file -> {
-//				if (!Files.isDirectory(file)) {
-//					try {
-//						Files.delete(file);
-//					} catch (IOException ex) {
-//						System.out.println("Could not delete file: " + file);
-//					}
-//				}
-//			});
-//		} catch (IOException ex) {
-//			System.out.println("Could not list directory: " + dirPath);
-//		}
-//	}
+
+	// delete old photo and update new one
+	public static void cleanDir(String dir) {
+		Path dirPath = Paths.get(dir);
+
+		try {
+			Files.list(dirPath).forEach(file -> {
+				if (!Files.isDirectory(file)) {
+					try {
+						Files.delete(file);
+					} catch (IOException ex) {
+						System.out.println("Could not delete file: " + file);
+					}
+				}
+			});
+		} catch (IOException ex) {
+			System.out.println("Could not list directory: " + dirPath);
+		}
+	}
 }
