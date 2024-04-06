@@ -3,3 +3,48 @@
 *.icon-green {color: green}
 *.icon-dark {color: gray}
 *.icon-grey {color: grey}
+
+@media screen and (max-width: 768px) {
+    /* small screen */
+    div.full-details { display: none }
+    div.less-details { display: block; }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    /* medium screen */
+    div.full-details { display: block; }
+    div.less-details { display: none; }
+    .hideable-column { display: none }
+}
+
+@media screen and (min-width: 1024px) {
+    /* small screen */
+    div.less-details { display: none; }
+    .hideable-column { display: table-cell; }
+}
+
+.manage-users {
+    margin-bottom: 20px;
+}
+
+.action-icons {
+    margin-bottom: 10px;
+}
+
+.action-icon {
+    margin-right: 10px;
+    color: #343a40;
+    text-decoration: none;
+}
+
+.action-icon:hover {
+    color: #007bff;
+}
+
+.search-form label {
+    margin-right: 10px;
+}
+
+.search-form button {
+    margin-left: 10px;
+}

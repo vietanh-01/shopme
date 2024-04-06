@@ -11,9 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,6 +29,10 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public User getUserByEmail(String email) {
+        return userRepository.getUserByEmail(email);
+    }
 
     public List<User> listAll() {
         return (List<User>) userRepository.findAll(Sort.by("firstName").ascending());
@@ -95,5 +100,21 @@ public class UserService {
 
     public void updateEnableStatus(Integer id, boolean enabled) {
         userRepository.updateEnabledStatus(id, enabled);
+    }
+
+    public User updateAccount(User userInform) {
+        User userInDB = userRepository.findById(userInform.getId()).get();
+        if(!userInform.getPassword().isEmpty()) {
+            userInDB.setPassword(userInform.getPassword());
+        }
+
+        if(userInform.getPhotos() != null) {
+            userInDB.setPhotos(userInform.getPhotos());
+        }
+
+        userInDB.setFirstName(userInform.getFirstName());
+        userInDB.setLastName(userInform.getLastName());
+
+        return userRepository.save(userInDB);
     }
 }

@@ -3,7 +3,7 @@ package com.shopme.common.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -29,7 +29,7 @@ public class User {
 	
 	private boolean enabled;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "users_roles",
 			joinColumns = @JoinColumn(name = "user_id"),
@@ -130,5 +130,9 @@ public class User {
 
 		return "/user-photos/" + this.id + "/" + this.photos;
 	}
-	
+
+	@Transient
+	public String getFullName() {
+		return this.firstName + " " + this.lastName;
+	}
 }

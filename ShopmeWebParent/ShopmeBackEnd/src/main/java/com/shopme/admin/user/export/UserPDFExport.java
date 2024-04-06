@@ -1,17 +1,17 @@
-package com.shopme.admin.user;
+package com.shopme.admin.user.export;
 
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.pdf.*;
 import com.shopme.common.entity.User;
 
-import javax.servlet.http.HttpServletResponse;
+
+import jakarta.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
-public class UserPDFExport extends AbstractClassExporter{
+public class UserPDFExport extends AbstractClassExporter {
 
     public void export(List<User> userList, HttpServletResponse response) throws IOException {
         super.setResponseHeader(response, "application/pdf", ".pdf");
@@ -19,18 +19,14 @@ public class UserPDFExport extends AbstractClassExporter{
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
 
-        // config unicode
-        InputStream fontStream = getClass().getResourceAsStream("src/main/resources/static/font/arial.ttf");
-        BaseFont unicodeFont = BaseFont.createFont("arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, true, fontStream.readAllBytes(), null);
-
-        Font font = new Font(unicodeFont, 16, Font.BOLD);
-
-
         document.open();
 
-//        Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-//        font.setSize(16);
-//        font.setColor(Color.BLACK);
+        Font f = new Font(BaseFont.createFont("static/font/arial.ttf",
+                BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+
+        Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        font.setSize(16);
+        font.setColor(Color.BLACK);
 
         Paragraph paragraph = new Paragraph("List of users", font);
         paragraph.setAlignment(Paragraph.ALIGN_CENTER);
@@ -40,23 +36,23 @@ public class UserPDFExport extends AbstractClassExporter{
         PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100f);
         table.setSpacingBefore(10);
-
+        table.setWidths(new float[] {1.0f, 3.5f, 3.0f, 3.0f, 3.0f, 1.5f});
         writeTableHeader(table);
-        writeTabledData(table, userList);
+        writeTabledData(table, userList, f);
 
         document.add(table);
 
         document.close();
     }
 
-    private void writeTabledData(PdfPTable table, List<User> userList) {
+    private void writeTabledData(PdfPTable table, List<User> userList, Font font) {
         for(User u : userList) {
-            table.addCell(String.valueOf(u.getId()));
-            table.addCell(u.getEmail());
-            table.addCell(u.getFirstName());
-            table.addCell(u.getLastName());
-            table.addCell(u.getRoles().toString());
-            table.addCell(String.valueOf(u.isEnabled()));
+            table.addCell(new Phrase(String.valueOf(u.getId()), font));
+            table.addCell(new Phrase(u.getEmail(), font));
+            table.addCell(new Phrase(u.getFirstName(), font));
+            table.addCell(new Phrase(u.getLastName(), font));
+            table.addCell(new Phrase(u.getRoles().toString(), font));
+            table.addCell(new Phrase(String.valueOf(u.isEnabled()), font));
         }
     }
 
@@ -65,10 +61,11 @@ public class UserPDFExport extends AbstractClassExporter{
         cell.setBackgroundColor(new Color(0,191,255));
         cell.setPadding(5);
 
+
         Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
         font.setColor(Color.WHITE);
 
-        cell.setPhrase(new Phrase("User ID", font));
+        cell.setPhrase(new Phrase("ID", font));
         table.addCell(cell);
 
         cell.setPhrase(new Phrase("E-mail", font));
