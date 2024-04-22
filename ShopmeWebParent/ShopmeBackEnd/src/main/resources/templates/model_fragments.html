@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<!--<style>-->
+<!--    .modal-content {-->
+<!--        border-radius: 4px;-->
+<!--    }-->
+
+<!--    .modal-header {-->
+<!--        background-color: #007bff;-->
+<!--        color: #fff;-->
+<!--        border-radius: 4px 4px 0 0;-->
+<!--    }-->
+
+<!--    .modal-footer {-->
+<!--        border-radius: 0 0 4px 4px;-->
+<!--    }-->
+<!--</style>-->
+<body>
+    <div th:fragment="modal_dialog" class="modal fade text-center" id="modalDialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Warning</h4>
+                </div>
+                <div class="modal-body">
+                    <span id="modalBody"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="confirm_modal" class="modal fade text-center" id="confirmModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Confirmation</h4>
+                </div>
+
+                <div class="modal-body">
+                    <span id="confirmText"></span>
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-success" href="" id="yesButton">Yes</a>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

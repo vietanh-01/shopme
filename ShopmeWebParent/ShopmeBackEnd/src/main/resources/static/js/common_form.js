@@ -18,11 +18,25 @@ $(document).ready(function() {
 });
 
 function showImageThumbnail(fileInput) {
-    const file = fileInput.files[0];
-    const reader = new FileReader();
+    let file = fileInput.files[0];
+    let reader = new FileReader();
     reader.onload = function(e) {
         $("#thumbnail").attr("src", e.target.result);
     };
 
     reader.readAsDataURL(file);
+}
+
+function showModalDialog(title, message) {
+    $("#modalTitle").text(title);
+    $("#modalBody").text(message);
+    $("#modalDialog").modal();
+}
+
+function showErrorModal(message) {
+    showModalDialog("Error", message);
+}
+
+function showWarningModal(message) {
+    showModalDialog("Warning", message);
 }

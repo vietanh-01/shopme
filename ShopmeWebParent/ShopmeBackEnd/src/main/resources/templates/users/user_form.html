@@ -75,21 +75,8 @@
     border-radius: 4px;
   }
 
-  /* Style cho modal */
-  .modal-content {
-    border-radius: 4px;
-  }
-
-  .modal-header {
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 4px 4px 0 0;
-  }
-
-  .modal-footer {
-    border-radius: 0 0 4px 4px;
-  }
 </style>
+
 <body>
 <div th:replace="~{navigation :: menu}"></div>
 
@@ -180,56 +167,36 @@
     </div>
   </form>
 
-  <div class="modal fade text-center" id="modalDialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="modalTitle">Warning</h4>
-
-        </div>
-
-        <div class="modal-body">
-          <span id="modalBody"></span>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div th:replace="model_fragments :: modal_dialog"></div>
 
 </div>
 <script type="text/javascript">
-  moduleURL = "[[@{/}]]";
+  moduleURL = "[[@{/users}]]";
+
   function checkEmailUnique(form) {
-    url = "[[@{/users/check_email}]]";
-    userEmail = $("#email").val();
-    userId = $("#id").val();
-    csrfValue = $("input[name='_csrf']").val();
-    params = {id: userId, email: userEmail, _csrf: csrfValue};
+    let url = "[[@{/users/check_email}]]";
+    let userEmail = $("#email").val();
+    let userId = $("#id").val();
+    let csrfValue = $("input[name='_csrf']").val();
+
+    let params = {id: userId, email: userEmail, _csrf: csrfValue};
 
     $.post(url, params, function(response) {
       if (response == "OK") {
         form.submit();
       } else if (response == "Duplicated") {
-        showModalDialog("Warning", "There is another user having the email: " + userEmail);
+        showWarningModal("There is another user having the email " + userEmail);
       } else {
-        showModalDialog("Error", "Unknown response from server");
+        showErrorModal("Unknown response from server");
       }
     }).fail(function() {
-      showModalDialog("Error", "Could not connect to the server");
+      showErrorModal("Could not connect to the server");
     });
 
     return false;
   }
 
-  function showModalDialog(title, message) {
-    $("#modalTitle").text(title);
-    $("#modalBody").text(message);
-    $("#modalDialog").modal();
 
-  }
 </script>
 <script th:src="@{/js/common_form.js}"></script>
 </body>

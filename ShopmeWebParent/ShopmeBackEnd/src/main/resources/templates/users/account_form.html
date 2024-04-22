@@ -172,7 +172,7 @@
 <script type="text/javascript">
   moduleURL = "[[@{/users}]]";
   function checkPasswordMatch(confirmPassword) {
-      var password = document.getElementById("password").value;
+      let password = document.getElementById("password").value;
       if(confirmPassword.value !== password) {
           confirmPassword.setCustomValidity("Password do not match!");
       }
@@ -180,7 +180,7 @@
   }
 
   setTimeout(function() {
-    var successMessage = document.getElementById('successMessage');
+    let successMessage = document.getElementById('successMessage');
     if (successMessage) {
       successMessage.style.display = 'none';
     }

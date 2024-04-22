@@ -1,6 +1,7 @@
 package com.shopme.common.entity;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -26,6 +27,7 @@ public class Category {
 	@Column(length = 128, nullable = false)
 	private String image;
 
+	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
 	@ManyToOne
@@ -57,6 +59,7 @@ public class Category {
 		copyCategory.setImage(category.getImage());
 		copyCategory.setAlias(category.getAlias());
 		copyCategory.setEnabled(category.isEnabled());
+		copyCategory.setHasChildren(category.getChildren().size() > 0);
 
 		return copyCategory;
 	}
@@ -96,6 +99,23 @@ public class Category {
 	public Category(String name, Category parent) {
 		this(name);
 		this.parent = parent;
+	}
+
+	public Category(Integer id, String name, String alias) {
+		this.id = id;
+		this.name = name;
+		this.alias = alias;
+	}
+
+	@Transient
+	private boolean hasChildren;
+
+	public boolean isHasChildren() {
+		return hasChildren;
+	}
+
+	public void setHasChildren(boolean hasChildren) {
+		this.hasChildren = hasChildren;
 	}
 
 	public Integer getId() {
@@ -154,7 +174,18 @@ public class Category {
 		this.children = children;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Category category = (Category) o;
+		return Objects.equals(id, category.id);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 
 }
 

@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public List<User> listAll() {
-        return (List<User>) userRepository.findAll(Sort.by("firstName").ascending());
+        return userRepository.findAll(Sort.by("firstName").ascending());
     }
 
     public List<Role> listRole() {
@@ -98,9 +98,6 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void updateEnableStatus(Integer id, boolean enabled) {
-        userRepository.updateEnabledStatus(id, enabled);
-    }
 
     public User updateAccount(User userInform) {
         User userInDB = userRepository.findById(userInform.getId()).get();

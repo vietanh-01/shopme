@@ -132,6 +132,8 @@ public class UserController {
                              RedirectAttributes redirectAttributes) {
         try {
             service.delete(id);
+            String userDir = "user-photos/" + id;
+            FileUploadUtil.removeDir(userDir);
             redirectAttributes.addFlashAttribute("message",
                     "The user ID " + id + " has been deleted successfully");
         } catch (UserNotFoundException ex) {
@@ -141,16 +143,6 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/users/{id}/enabled/{status}")
-    public String updateEnabledStatus(@PathVariable("id") Integer id,
-                                      @PathVariable("status") boolean enabled,
-                                      RedirectAttributes redirectAttributes) {
-        service.updateEnableStatus(id, enabled);
-        String status = enabled ? "enabled" : "disabled";
-        String message = "The user ID " + id + " has been " + status;
-        redirectAttributes.addFlashAttribute("message", message);
-        return "redirect:/users";
-    }
 
     @GetMapping("/users/export/csv")
     public void exportToCSV(HttpServletResponse response) throws IOException {

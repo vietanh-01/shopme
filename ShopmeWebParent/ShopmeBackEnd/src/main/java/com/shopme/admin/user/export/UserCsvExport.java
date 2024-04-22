@@ -1,5 +1,6 @@
 package com.shopme.admin.user.export;
 
+import com.shopme.admin.AbstractClassExporter;
 import com.shopme.common.entity.User;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
