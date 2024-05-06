@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <head th:replace="~{fragments :: page_head(${pageTitle}, 'tag')}" />
+  <link rel="stylesheet" th:href="@{/common_form.css}" />
+</head>
+
+<body>
+<div th:replace="~{navigation :: menu}"></div>
+
+<div class="container-fluid">
+
+  <div>
+    <h2>Manage Brands | [[${pageTitle}]]</h2>
+  </div>
+
+  <form th:action="@{/brands/save}" method="post" style="max-width: 700px; margin: 0 auto"
+        enctype="multipart/form-data"
+        onsubmit="return checkBrandUnique(this)"
+        th:object="${brand}">
+    <input type="hidden" th:field="*{id}" />
+    <div class="border border-secondary rounded p-3">
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Brand Name:</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" th:field="*{name}" required minlength="3" maxlength="45"  />
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Select one or more categories:</label>
+        <div class="col-sm-8">
+          <select class="form-control" th:field="*{categories}" multiple required
+                  style="resize: vertical; min-height: 400px">
+            <th:block th:each="cat : ${listCategories}">
+              <option th:value="${cat.id}">[[${cat.name}]]</option>
+            </th:block>
+
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Chosen categories:</label>
+        <div class="col-sm-8">
+          <div id="chosenCategories">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Brand Logo:</label>
+        <div class="col-sm-8">
+          <input type="hidden" th:field="*{logo}" />
+          <input type="file" id="fileImage" name="fileImage" accept="image/png, image/jpeg"
+                 th:required="${brand.id == null}"
+                 class="mb-2" />
+
+          <div class="mt-2">
+            <img id="thumbnail" alt="Image preview" th:src="@{${brand.logoPath}}"
+                 class="img-fluid" />
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <input type="submit" value="Save" class="btn btn-primary m-3" />
+        <input type="button" value="Cancel" class="btn btn-secondary" id="buttonCancel" />
+      </div>
+    </div>
+  </form>
+
+  <div th:replace="~{model_fragments :: modal_dialog}"></div>
+
+</div>
+<script type="text/javascript">
+  MAX_FILE_SIZE = 102400;
+  moduleURL = "[[@{/brands}]]";
+
+  function checkBrandUnique(form) {
+      let brandId = $("#id").val()
+      let brandName = $("#name").val()
+      let csrfValue = $("input[name='_csrf']").val()
+
+      let url = "[[@{/brands/check_unique}]]"
+
+      let params = {id: brandId, name: brandName, _csrf: csrfValue}
+
+      $.post(url, params, function (response) {
+         if(response == "OK")
+           form.submit()
+         else if(response == "Duplicated")
+           showWarningModal("There is another brand has name " + brandName)
+         else showErrorModal("Unknown response from server")
+
+      }).fail(function () {
+        showErrorModal("Could not connect to the server")
+      })
+
+      return false
+  }
+
+
+  $(document).ready(function() {
+    dropdownCategories = $("#categories");
+    divChosenCategories = $("#chosenCategories");
+
+    dropdownCategories.change(function() {
+      divChosenCategories.empty();
+      showChosenCategories();
+    });
+
+    showChosenCategories();
+  });
+
+  function showChosenCategories() {
+    dropdownCategories.children("option:selected").each(function() {
+      let selectedCategory = $(this);
+      let catId = selectedCategory.val();
+      let catName = selectedCategory.text().replace(/-/g, "");
+
+      divChosenCategories.append("<span class='badge badge-secondary m-1'>" + catName + "</span>");
+    });
+
+  }
+
+</script>
+<script th:src="@{/js/common_form.js}"></script>
+</body>
+</html>

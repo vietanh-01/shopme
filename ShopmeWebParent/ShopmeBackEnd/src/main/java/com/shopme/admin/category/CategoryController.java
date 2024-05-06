@@ -28,6 +28,7 @@ public class CategoryController {
     @Autowired
     private CategoryService service;
 
+
     @GetMapping("/categories")
     public String getCategoriesPage(@Param("sortDir") String sortDir , Model model) {
         return listByPage(1, sortDir, model, null);
@@ -39,8 +40,6 @@ public class CategoryController {
                              @Param("keyword") String keyword) {
 
         if(sortDir == null) sortDir = "asc";
-
-
         CategoryPageInfo pageInfo = new CategoryPageInfo();
         List<Category> categories = service.listByPage(pageInfo, pageNum, sortDir, keyword);
 
@@ -78,7 +77,7 @@ public class CategoryController {
     }
 
     @PostMapping("/categories/save")
-    public String saveCategory(Category category, @RequestParam("fileImage")MultipartFile multipartFile,
+    public String saveCategory(Category category, @RequestParam("fileImage") MultipartFile multipartFile,
                                RedirectAttributes redirectAttributes) throws IOException {
         if(!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());

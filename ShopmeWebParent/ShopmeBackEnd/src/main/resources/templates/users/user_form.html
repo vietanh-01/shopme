@@ -1,79 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: page_head(${pageTitle})}">
+<head>
+  <head th:replace="~{fragments :: page_head(${pageTitle}, 'tag')}" />
+  <link rel="stylesheet" th:href="@{/common_form.css}" />
 </head>
 <style>
-  /* Style cho body */
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    color: #343a40;
-  }
 
-
-  /* Style cho container */
-  .container-fluid {
-    padding: 20px;
-  }
-
-  /* Style cho tiêu đề */
-  h2 {
-    margin-bottom: 30px;
-    text-align: center;
-  }
-
-  /* Style cho các input và label */
-  .form-group {
-    margin-bottom: 30px;
-  }
-
-  label {
-    font-weight: bold;
-    color: #6c757d;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="file"] {
-    width: calc(100% - 20px);
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-top: 5px;
-  }
-
-  input[type="file"] {
-    padding: 5px;
-  }
-
-  /* Style cho nút */
-  .btn {
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  .btn-primary {
-    background-color: #007bff;
-    border: none;
-    color: #fff;
-  }
-
-  .btn-secondary {
-    background-color: #6c757d;
-    border: none;
-    color: #fff;
-  }
-
-  /* Style cho ảnh */
-  #thumbnail {
-    max-width: 100%;
-    height: auto;
-    margin-top: 10px;
-    border-radius: 4px;
-  }
 
 </style>
 
@@ -171,6 +103,7 @@
 
 </div>
 <script type="text/javascript">
+  MAX_FILE_SIZE = 102400;
   moduleURL = "[[@{/users}]]";
 
   function checkEmailUnique(form) {

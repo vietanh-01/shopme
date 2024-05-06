@@ -35,20 +35,7 @@ public class UserController {
         return listByPage(1, model, "firstName", "asc", null);
     }
 
-    @GetMapping("/users/new")
-    public String newUser(Model model) {
-        User user = new User();
-        user.setEnabled(true);
-        List<Role> roles =  service.listRole();
-
-        model.addAttribute("user", user);
-        model.addAttribute("listRoles", roles);
-        model.addAttribute("pageTitle", "Create New User");
-
-        return "users/user_form";
-    }
-
-    //get users in first page
+    //get users in specific page
     @GetMapping("/users/page/{pageNum}")
     public String listByPage(
             @PathVariable("pageNum") int pageNum, Model model,
@@ -79,6 +66,20 @@ public class UserController {
 
         return "users/users";
     }
+
+    @GetMapping("/users/new")
+    public String newUser(Model model) {
+        User user = new User();
+        user.setEnabled(true);
+        List<Role> roles =  service.listRole();
+
+        model.addAttribute("user", user);
+        model.addAttribute("listRoles", roles);
+        model.addAttribute("pageTitle", "Create New User");
+
+        return "users/user_form";
+    }
+
 
     @PostMapping("/users/save")
     public String saveUser(User user, RedirectAttributes redirectAttributes,

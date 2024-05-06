@@ -27,7 +27,6 @@ public class Category {
 	@Column(length = 128, nullable = false)
 	private String image;
 
-	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
 	@ManyToOne

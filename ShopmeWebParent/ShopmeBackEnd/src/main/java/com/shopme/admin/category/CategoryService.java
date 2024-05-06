@@ -47,7 +47,6 @@ public class CategoryService {
             for(Category category : searchResult) {
                 category.setHasChildren(category.getChildren().size() > 0);
             }
-
             return searchResult;
         } else
             return listHierarchicalCategories(rootCategories, sortDir);
