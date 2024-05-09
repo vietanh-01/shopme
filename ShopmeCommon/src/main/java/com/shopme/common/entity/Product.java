@@ -73,10 +73,10 @@ public class Product {
     private float height;
     private float weight;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductImage> images = new HashSet<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductDetail> details = new ArrayList<>();
 
     public Integer getId() {
@@ -121,6 +121,10 @@ public class Product {
 
     public void addDetail(String name, String value) {
         this.details.add(new ProductDetail(name, value, this));
+    }
+
+    public void addDetail(Integer id, String name, String value) {
+        this.details.add(new ProductDetail(id, name, value, this));
     }
 
     public List<ProductDetail> getDetails() {
@@ -249,5 +253,23 @@ public class Product {
     @Override
     public String toString() {
         return "Product [id=" + id + ", name=" + name + "]";
+    }
+
+    public boolean containsImageName(String imageName) {
+        Iterator<ProductImage> iterator = images.iterator();
+
+        while (iterator.hasNext()) {
+            ProductImage image = iterator.next();
+            if(image.getName().equals(imageName)) return true;
+        }
+
+        return false;
+    }
+
+    @Transient
+    public String getShortName() {
+        if (name.length() > 70)
+            return name.substring(0, 70).concat("...");
+        return name;
     }
 }

@@ -13,7 +13,7 @@ import java.util.*;
 @Service
 public class CategoryService {
 
-    public static final int ROOT_CATEGORIES_PER_PAGE = 4;
+    public static final int ROOT_CATEGORIES_PER_PAGE = 1;
     @Autowired
     private CategoryRepository repository;
 
@@ -88,6 +88,13 @@ public class CategoryService {
     }
 
     public Category saveCategory(Category category) {
+        Category parent = category.getParent();
+        if (parent != null) {
+            String allParentIDs = parent.getAllParentIDs() == null ? "-" : parent.getAllParentIDs();
+            allParentIDs += String.valueOf(parent.getId()) + "-";
+            category.setAllParentIDs(allParentIDs);
+        }
+
         Category save = repository.save(category);
         return save;
     }
