@@ -1,6 +1,7 @@
 package com.shopme.admin.brand;
 
 import com.shopme.common.entity.Brand;
+import com.shopme.common.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -70,5 +71,9 @@ public class BrandService {
                 return "Duplicated";
         }
         return "OK";
+    }
+
+    public List<Category> getListCategoriesByBrand(Integer id) {
+        return repo.findCategoriesByBrandId(id);
     }
 }

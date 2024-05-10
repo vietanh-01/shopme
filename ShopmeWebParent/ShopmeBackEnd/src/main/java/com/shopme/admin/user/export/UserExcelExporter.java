@@ -71,7 +71,8 @@ public class UserExcelExporter extends AbstractClassExporter {
         cell.setCellStyle(style);
     }
     public void export(List<User> listUsers, HttpServletResponse response) throws IOException {
-        super.setResponseHeader(response, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx");
+        super.setResponseHeader(response, "application/octet-stream", ".xlsx", "users_");
+
         writeHeaderLine();
         writeDataLine(listUsers);
 

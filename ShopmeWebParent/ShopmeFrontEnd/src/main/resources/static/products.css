@@ -1,0 +1,82 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+.container-fluid {
+    padding: 20px;
+}
+
+.breadcrumb {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.breadcrumb-item {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.breadcrumb-item a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+.category-item {
+    margin: 10px;
+}
+
+.category-item img {
+    display: block;
+    margin: 0 auto;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.category-item img:hover {
+    border-color: #0056b3;
+}
+
+.category-item b {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #343a40;
+}
+
+.product-item {
+    margin: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
+
+.product-item img {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+
+.product-item b {
+    color: #343a40;
+    font-weight: bold;
+}
+
+.product-item span {
+    display: block;
+    margin-top: 5px;
+}
+
+.product-item del {
+    color: #6c757d;
+}

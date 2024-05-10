@@ -1,6 +1,7 @@
 package com.shopme.common.entity;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -134,5 +135,18 @@ public class User {
 	@Transient
 	public String getFullName() {
 		return this.firstName + " " + this.lastName;
+	}
+
+	public boolean hasRole(String roleName) {
+		Iterator<Role> iterator = roles.iterator();
+
+		while (iterator.hasNext()) {
+			Role role = iterator.next();
+			if (role.getName().equals(roleName)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

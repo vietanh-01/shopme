@@ -17,7 +17,7 @@ import java.util.List;
 public class UserCsvExport extends AbstractClassExporter {
     public void export(List<User> listUsers, HttpServletResponse response) throws IOException {
 
-        super.setResponseHeader(response, "text/csv", ".csv");
+        super.setResponseHeader(response, "text/csv", ".csv", "users_");
         OutputStream outputStream = response.getOutputStream();
         Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
 

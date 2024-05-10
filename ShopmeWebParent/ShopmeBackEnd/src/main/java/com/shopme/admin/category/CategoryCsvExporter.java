@@ -17,7 +17,8 @@ import java.util.List;
 public class CategoryCsvExporter extends AbstractClassExporter {
     public void export(List<Category> listCategories, HttpServletResponse response) throws IOException {
 
-        super.setResponseHeaderCategory(response, "text/csv", ".csv");
+//        super.setResponseHeaderCategory(response, "text/csv", ".csv");
+        super.setResponseHeader(response, "text/csv", ".csv", "categories_");
         OutputStream outputStream = response.getOutputStream();
         Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
 

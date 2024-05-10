@@ -3,8 +3,11 @@ package com.shopme.admin.brand;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.category.CategoryService;
 import com.shopme.admin.user.UserService;
+import com.shopme.admin.user.export.UserCsvExport;
 import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Category;
+import com.shopme.common.entity.User;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -130,5 +133,12 @@ public class BrandController {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
         }
         return "redirect:/brands";
+    }
+
+    @GetMapping("/brands/export/csv")
+    public void exportToCSV(HttpServletResponse response) throws IOException {
+        List<Brand> brandList = brandService.listAll();
+        BrandExporterCsv exporter = new BrandExporterCsv(brandService);
+        exporter.export(brandList, response);
     }
 }

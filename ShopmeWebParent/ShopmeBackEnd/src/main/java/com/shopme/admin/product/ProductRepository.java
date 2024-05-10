@@ -23,7 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId "
             + "OR p.category.allParentIDs LIKE %:categoryIdMatch%")
-    Page<Product> findAllCategory(@Param("categoryId") Integer categoryId,
+    Page<Product> findAllInCategory(@Param("categoryId") Integer categoryId,
                                          @Param("categoryIdMatch") String categoryIdMatch,
                                          Pageable pageable);
 
@@ -37,4 +37,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Page<Product> searchInCategory(@Param("categoryId") Integer categoryId,
                                           @Param("categoryIdMatch") String categoryIdMatch,
                                           @Param("keyword") String keyword, Pageable pageable);
+
+
 }
