@@ -5,6 +5,7 @@ import com.shopme.admin.user.UserService;
 import com.shopme.admin.user.export.UserCsvExport;
 import com.shopme.common.entity.Category;
 import com.shopme.common.entity.User;
+import com.shopme.common.exception.CategoryNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

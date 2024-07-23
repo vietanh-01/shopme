@@ -9,6 +9,7 @@ import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Category;
 import com.shopme.common.entity.Product;
 import com.shopme.common.entity.ProductImage;
+import com.shopme.common.exception.ProductNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,8 @@ import java.util.Set;
 public class ProductController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+
+    private String defaultRedirectURL = "redirect:/products/page/1?sortField=name&sortDir=asc&categoryId=0";
 
     @Autowired
     private ProductService productService;
@@ -91,14 +94,7 @@ public class ProductController {
         return "products/products";
     }
 
-//    @GetMapping("/products")
-//    public String listAll(Model model) {
-//        List<Product> listProducts = productService.listAll();
-//
-//        model.addAttribute("listProducts", listProducts);
-//
-//        return "products/products";
-//    }
+
 
     @GetMapping("/products/new")
     public String newProduct(Model model) {
@@ -128,10 +124,12 @@ public class ProductController {
                               @RequestParam(name = "imageNames", required = false) String[] imageNames,
                               @AuthenticationPrincipal ShopmeUserDetails loggedUser
                               ) throws IOException {
-        if (loggedUser.hasRole("Salesperson")) {
-            productService.saveProductPrice(product);
-            ra.addFlashAttribute("message", "The product has been saved successfully.");
-            return "redirect:/products";
+        if (!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Editor")) {
+            if (loggedUser.hasRole("Salesperson")) {
+                productService.saveProductPrice(product);
+                ra.addFlashAttribute("message", "The product has been saved successfully.");
+                return defaultRedirectURL;
+            }
         }
 
         ProductSaveHelper.setMainImageName(mainImageMultipart, product);
@@ -172,23 +170,32 @@ public class ProductController {
 
     @GetMapping("/products/edit/{id}")
     public String editProduct(@PathVariable("id") Integer id, Model model,
-                              RedirectAttributes redirectAttributes) {
+                              RedirectAttributes ra, @AuthenticationPrincipal ShopmeUserDetails loggedUser) {
         try {
             Product product = productService.get(id);
             List<Brand> listBrands = brandService.listAll();
             Integer numberOfExistingExtraImages = product.getImages().size();
 
+            boolean isReadOnlyForSalesperson = false;
+
+            if (!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Editor")) {
+                if (loggedUser.hasRole("Salesperson")) {
+                    isReadOnlyForSalesperson = true;
+                }
+            }
+
+            model.addAttribute("isReadOnlyForSalesperson", isReadOnlyForSalesperson);
             model.addAttribute("product", product);
-            model.addAttribute("pageTitle", "Edit Product(ID: " + id + ")");
             model.addAttribute("listBrands", listBrands);
+            model.addAttribute("pageTitle", "Edit Product (ID: " + id + ")");
             model.addAttribute("numberOfExistingExtraImages", numberOfExistingExtraImages);
 
             return "products/product_form";
 
         } catch (ProductNotFoundException e) {
-            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            ra.addFlashAttribute("message", e.getMessage());
 
-            return "redirect:/products";
+            return defaultRedirectURL;
         }
     }
 

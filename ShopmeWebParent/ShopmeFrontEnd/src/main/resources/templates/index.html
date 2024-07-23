@@ -8,7 +8,9 @@
 <body>
 
 <div th:replace="navigation :: header_menu"></div>
+<div th:replace="navigation :: search_nav"></div>
 <div class="container-fluid">
+
 	<div class="header">
 		<h1>Shopping by Categories</h1>
 	</div>
@@ -16,8 +18,10 @@
 	<div class="container">
 		<div class="category">
 			<div class="category-item" th:each="cat : ${listCategories}">
-				<img th:src="@{${cat.imagePath}}" alt="Category Image" />
-				<a th:href="@{'/c/' + ${cat.alias}}" th:text="${cat.name}"></a>
+				<a th:href="@{'/category/' + ${cat.alias}}" >
+						<img th:src="@{${cat.imagePath}}" alt="Category Image" />
+						<p th:text="${cat.name}"></p>
+				</a>
 			</div>
 		</div>
 	</div>

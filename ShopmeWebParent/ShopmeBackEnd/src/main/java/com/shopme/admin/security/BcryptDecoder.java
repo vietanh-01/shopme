@@ -10,7 +10,7 @@ public class BcryptDecoder {
     }
 
     public static void main(String[] args) {
-        String encodedString = "$2a$12$m1m6js2jPaCVEGuag9mJ2.VTT0vXfsWoVAyXc.NrwjSq0a.MVTxte";
+        String encodedString = "$2a$10$zyNQbQgXJai5aUyc932o1eI.3WwZaONFkEkoYQebz2N2f8pDbfYZ.";
         String decodedString = decodeBcrypt(encodedString);
         System.out.println("Decoded string: " + decodedString);
     }

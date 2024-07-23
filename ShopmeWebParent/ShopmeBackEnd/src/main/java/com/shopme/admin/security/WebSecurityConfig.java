@@ -39,7 +39,7 @@ public class WebSecurityConfig {
         http.authenticationProvider(authenticationProvider());
 
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/**").hasAuthority("Admin")
+                        .requestMatchers("/users/**", "/settings/**", "/countries/**", "/states/**").hasAuthority("Admin")
                         .requestMatchers("/categories/**").hasAnyAuthority("Admin", "Editor")
                         .requestMatchers("/brands/**").hasAnyAuthority("Admin", "Editor")
 
@@ -62,7 +62,7 @@ public class WebSecurityConfig {
                 .logout(logout -> logout.permitAll())
                 .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
                         .key("AbcDefgHijKlmnOpqrs_1234567890")
-                        .tokenValiditySeconds(7 * 24 * 60 * 60));
+                        .tokenValiditySeconds(24 * 24 * 60 * 60));
 
         return http.build();
     }

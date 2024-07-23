@@ -5,6 +5,7 @@ $(document).ready(function () {
     });
 
     customizeDropDownMenu();
+    customizeTabs()
 })
 
 function customizeDropDownMenu() {
@@ -20,4 +21,16 @@ function customizeDropDownMenu() {
     $(".dropdown > a").click(function () {
         location.href=this.href;
     });
+}
+
+function customizeTabs() {
+    var url = document.location.toString()
+    if(url.match('#')) {
+        $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show')
+
+    }
+
+    $('.nav-tabs a').on('shown.bs.tabs', function (e) {
+        window.location.hash = e.target.hash
+    })
 }
