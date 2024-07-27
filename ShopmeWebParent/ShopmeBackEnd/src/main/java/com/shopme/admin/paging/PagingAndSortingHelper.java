@@ -39,7 +39,7 @@ public class PagingAndSortingHelper {
 		model.addAttribute("startCount", startCount);
 		model.addAttribute("endCount", endCount);
 		model.addAttribute("totalItems", page.getTotalElements());
-		model.addAttribute(listName, listItems);
+		model.addAttribute("listName", listItems);
 	}
 	
 	public void listEntities(int pageNum, int pageSize, SearchRepository<?, Integer> repo) {

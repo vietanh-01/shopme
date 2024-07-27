@@ -60,4 +60,9 @@ public class CartItem {
         return "CartItem [id=" + id + ", customer=" + customer.getFullName() + ", product=" + product.getShortName() + ", quantity=" + quantity
                 + "]";
     }
+
+    @Transient
+    public float getSubtotal() {
+        return product.getDiscountPrice() * quantity;
+    }
 }

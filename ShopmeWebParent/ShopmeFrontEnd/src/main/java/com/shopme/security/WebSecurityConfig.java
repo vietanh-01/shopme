@@ -10,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,7 +48,7 @@ public class WebSecurityConfig{
 		http.authenticationProvider(authenticationProvider());
 
 		http.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/account_details", "/update_account_details").authenticated()
+				.requestMatchers("/account_details", "/update_account_details", "/cart").authenticated()
 				.anyRequest().permitAll()
 		)
 				.formLogin(form -> form
@@ -64,7 +65,10 @@ public class WebSecurityConfig{
 				.logout(logout -> logout.permitAll())
 				.rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
 						.key("1234567890_aBcDeFgHiJkLmNoPqRsTuVwXyZ")
-						.tokenValiditySeconds(14 * 24 * 60 * 60));
+						.tokenValiditySeconds(14 * 24 * 60 * 60))
+						.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+				;
+
 
 		return http.build();
 	}

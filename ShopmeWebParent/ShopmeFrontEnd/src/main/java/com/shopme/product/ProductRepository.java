@@ -2,12 +2,16 @@ package com.shopme.product;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.shopme.common.entity.Product;
 
-public interface ProductRepository extends PagingAndSortingRepository<Product, Integer> {
+import java.util.List;
+
+public interface ProductRepository extends CrudRepository<Product, Integer> {
 
 	@Query("SELECT p FROM Product p WHERE p.enabled = true "
 			+ "AND (p.category.id = ?1 OR p.category.allParentIDs LIKE %?2%)"
@@ -20,4 +24,5 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
 			+ "MATCH(name, short_description, full_description) AGAINST (?1)",
 			nativeQuery = true)
 	Page<Product> search(String keyword, Pageable pageable);
+
 }
