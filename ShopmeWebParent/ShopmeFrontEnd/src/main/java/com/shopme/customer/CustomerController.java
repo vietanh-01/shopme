@@ -105,14 +105,24 @@ public class CustomerController {
     }
 
 
-
     @PostMapping("/update_account_details")
     public String updateAccountDetails(Model model, Customer customer,
                                        RedirectAttributes ra, HttpServletRequest request) {
         customerService.update(customer);
         ra.addFlashAttribute("message", "Your account has been updated.");
         updateNameForAuthenticatedCustomer(customer, request);
-        return "redirect:/account_details";
+
+        String redirectOption = request.getParameter("redirect");
+        String redirectURL = "redirect:/account_details";
+
+        if("address_book".equals(redirectOption)) {
+            redirectURL = "redirect:/address_book";
+        } else if("cart".equals(redirectOption)) {
+            redirectURL = "redirect:/cart";
+        } else if("checkout".equals(redirectOption)) {
+            redirectURL = "redirect:/address_book?redirect=checkout";
+        }
+        return redirectURL;
     }
 
     private void updateNameForAuthenticatedCustomer(Customer customer, HttpServletRequest request) {

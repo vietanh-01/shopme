@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.common.entity.Currency;
-import com.shopme.common.entity.Setting;
+import com.shopme.common.entity.setting.Setting;
 
 @Controller
 public class SettingController {
@@ -108,5 +108,15 @@ public class SettingController {
 		ra.addFlashAttribute("message", "Mail templates settings have been saved");
 
 		return "redirect:/settings";
+	}
+
+	@PostMapping("/settings/save_payment")
+	public String savePaymentSettings(HttpServletRequest request, RedirectAttributes ra) {
+		List<Setting> paymentSettings = service.getPaymentSettings();
+		updateSettingValuesFromForm(request, paymentSettings);
+
+		ra.addFlashAttribute("message", "Payments settings have been saved");
+
+		return "redirect:/settings#payment";
 	}
 }

@@ -48,7 +48,8 @@ public class WebSecurityConfig{
 		http.authenticationProvider(authenticationProvider());
 
 		http.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/account_details", "/update_account_details", "/cart").authenticated()
+				.requestMatchers("/account_details", "/update_account_details", "/cart", "/orders/**",
+						"/address_book/**", "/checkout", "/place_order", "/process_paypal_order").authenticated()
 				.anyRequest().permitAll()
 		)
 				.formLogin(form -> form

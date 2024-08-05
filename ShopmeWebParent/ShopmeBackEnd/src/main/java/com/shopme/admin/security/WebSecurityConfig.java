@@ -39,6 +39,7 @@ public class WebSecurityConfig {
         http.authenticationProvider(authenticationProvider());
 
         http.authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/states/list_by_country/**").hasAnyAuthority("Admin", "Salesperson")
                         .requestMatchers("/users/**", "/settings/**", "/countries/**", "/states/**").hasAuthority("Admin")
                         .requestMatchers("/categories/**").hasAnyAuthority("Admin", "Editor")
                         .requestMatchers("/brands/**").hasAnyAuthority("Admin", "Editor")
@@ -52,7 +53,9 @@ public class WebSecurityConfig {
                         .hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
 
                         .requestMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
-                        .requestMatchers("/shipping/**").hasAnyAuthority("Admin", "Salesperson")
+                        .requestMatchers("/orders", "/orders/page/**", "/orders/detail/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
+                        .requestMatchers("/shipping/**", "/customers/**", "/orders/**", "/get_shipping_cost").hasAnyAuthority("Admin", "Salesperson")
+                        .requestMatchers("/orders_shipper/update/**").hasAuthority("Shipper")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -64,6 +67,7 @@ public class WebSecurityConfig {
                 .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
                         .key("AbcDefgHijKlmnOpqrs_1234567890")
                         .tokenValiditySeconds(24 * 24 * 60 * 60));
+        http.headers(headers -> headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.sameOrigin()));
 
         return http.build();
     }

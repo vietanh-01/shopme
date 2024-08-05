@@ -4,14 +4,13 @@
 <body>
 <div th:replace="navigation :: menu"></div>
 <div class="container-fluid">
-
 	<div>
-		<h2>Manage Shipping Rates</h2>	
+		<h1 class="text-center">Manage Shipping Rates</h1>
 		
 		<a th:href="@{/shipping_rates/new}" class="fas fa-folder-plus fa-2x icon-dark mr-2"></a>
 	</div>
 		
-	<div th:replace="fragments2 :: search_form_and_message" />
+	<div th:replace="fragments2 :: search_form_and_message()" />
 	
 	<div class="full-details">
 		<table class="table table-bordered table-striped table-hover table-responsive-xl">

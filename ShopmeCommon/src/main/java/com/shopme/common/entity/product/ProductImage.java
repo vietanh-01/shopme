@@ -1,17 +1,15 @@
-package com.shopme.common.entity;
+package com.shopme.common.entity.product;
 
+import com.shopme.common.entity.IdBasedEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "product_details")
-public class ProductDetail {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@Table(name = "product_images")
+public class ProductImage extends IdBasedEntity {
+
+
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
-    private String value;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -33,14 +31,6 @@ public class ProductDetail {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public Product getProduct() {
         return product;
     }
@@ -49,20 +39,22 @@ public class ProductDetail {
         this.product = product;
     }
 
-    public ProductDetail(Integer id, String name, String value, Product product) {
+    public ProductImage(String name, Product product) {
+        this.name = name;
+        this.product = product;
+    }
+
+    public ProductImage() {
+    }
+
+    public ProductImage(Integer id, String name, Product product) {
         this.id = id;
         this.name = name;
-        this.value = value;
         this.product = product;
     }
 
-    public ProductDetail(String name, String value, Product product) {
-        this.name = name;
-        this.value = value;
-        this.product = product;
+    @Transient
+    public String getImagePath() {
+        return "/product-images/" + product.getId() + "/extras/" + this.name;
     }
-
-    public ProductDetail() {}
-
 }
-

@@ -19,7 +19,8 @@ import com.shopme.common.entity.ShippingRate;
 public class ShippingRateController {
 	private String defaultRedirectURL = "redirect:/shipping_rates/page/1?sortField=country&sortDir=asc";
 	
-	@Autowired private ShippingRateService service;
+	@Autowired
+	private ShippingRateService service;
 	
 	@GetMapping("/shipping_rates")
 	public String listFirstPage() {

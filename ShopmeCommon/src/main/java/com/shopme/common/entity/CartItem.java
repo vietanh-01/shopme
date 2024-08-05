@@ -1,14 +1,13 @@
 package com.shopme.common.entity;
 
+import com.shopme.common.entity.product.Product;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "cart_items")
-public class CartItem {
+public class CartItem extends IdBasedEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -20,9 +19,22 @@ public class CartItem {
 
     private int quantity;
 
+    @Transient
+    private float shippingCost;
+
     public CartItem() {
 
     }
+
+    @Transient
+    public float getShippingCost() {
+        return shippingCost;
+    }
+
+    public void setShippingCost(float shippingCost) {
+        this.shippingCost = shippingCost;
+    }
+
     public Integer getId() {
         return id;
     }

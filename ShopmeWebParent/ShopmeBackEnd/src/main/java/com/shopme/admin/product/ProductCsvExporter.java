@@ -1,9 +1,7 @@
 package com.shopme.admin.product;
 
 import com.shopme.admin.AbstractClassExporter;
-import com.shopme.admin.brand.BrandService;
-import com.shopme.common.entity.Category;
-import com.shopme.common.entity.Product;
+import com.shopme.common.entity.product.Product;
 import jakarta.servlet.http.HttpServletResponse;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
@@ -18,8 +16,6 @@ import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class ProductCsvExporter extends AbstractClassExporter {
 

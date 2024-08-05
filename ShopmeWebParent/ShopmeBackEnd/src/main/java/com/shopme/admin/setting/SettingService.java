@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shopme.common.entity.Setting;
-import com.shopme.common.entity.SettingCategory;
+import com.shopme.common.entity.setting.Setting;
+import com.shopme.common.entity.setting.SettingCategory;
 
 @Service
 public class SettingService {
@@ -39,5 +39,12 @@ public class SettingService {
 
 	public List<Setting> getMailTemplateSettings() {
 		return repo.findByCategory(SettingCategory.MAIL_TEMPLATES);
+	}
+
+	public List<Setting> getCurrencySettings() {
+		return repo.findByCategory(SettingCategory.CURRENCY);
+	}
+	public List<Setting> getPaymentSettings() {
+		return repo.findByCategory(SettingCategory.PAYMENT);
 	}
 }

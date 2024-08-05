@@ -15,7 +15,7 @@ public class PagingAndSortingHelper {
 	private String sortDir;
 	private String keyword;
 	
-	public PagingAndSortingHelper(ModelAndViewContainer model,String listName,
+	public PagingAndSortingHelper(ModelAndViewContainer model, String listName,
 			String sortField, String sortDir, String keyword) {
 		this.model = model;
 		this.listName = listName;
@@ -39,7 +39,7 @@ public class PagingAndSortingHelper {
 		model.addAttribute("startCount", startCount);
 		model.addAttribute("endCount", endCount);
 		model.addAttribute("totalItems", page.getTotalElements());
-		model.addAttribute("listName", listItems);
+		model.addAttribute(listName, listItems);
 	}
 	
 	public void listEntities(int pageNum, int pageSize, SearchRepository<?, Integer> repo) {
@@ -72,6 +72,12 @@ public class PagingAndSortingHelper {
 	public String getKeyword() {
 		return keyword;
 	}
-	
-	
+
+	public String getListName() {
+		return listName;
+	}
+
+	public void setListName(String listName) {
+		this.listName = listName;
+	}
 }
