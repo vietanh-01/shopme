@@ -46,6 +46,17 @@ public class Order extends AbstractAddress {
     @OrderBy("updatedTime ASC")
     private List<OrderTrack> orderTracks = new ArrayList<>();
 
+    public Order() {
+    }
+
+    public Order(Integer id, Date orderTime, float productCost, float subtotal, float total) {
+        this.id = id;
+        this.orderTime = orderTime;
+        this.productCost = productCost;
+        this.subtotal = subtotal;
+        this.total = total;
+    }
+
     public List<OrderTrack> getOrderTracks() {
         return orderTracks;
     }

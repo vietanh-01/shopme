@@ -6,6 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
+import java.util.List;
+
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
@@ -22,5 +25,10 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     Page<Order> findAll(String keyword, Pageable pageable);
 
     Long countById(Integer id);
+
+    @Query("SELECT NEW com.shopme.common.entity.order.Order(o.id, o.orderTime, o.productCost,"
+            + " o.subtotal, o.total) FROM Order o WHERE"
+            + " o.orderTime BETWEEN ?1 AND ?2 ORDER BY o.orderTime ASC")
+    List<Order> findByOrderTimeBetween(Date startTime, Date endTime);
 
 }

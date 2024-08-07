@@ -91,6 +91,7 @@ public class Category extends IdBasedEntity{
 		return "/category-images/" + this.id + "/" + this.image;
 	}
 
+
 	public Category(String name) {
 		this.name = name;
 		this.alias = name;

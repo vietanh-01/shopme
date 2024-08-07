@@ -141,6 +141,7 @@ public class CheckoutController {
         content = content.replace("[[shippingAddress]]", order.getShippingAddress());
         content = content.replace("[[total]]", totalAmount);
         content = content.replace("[[paymentMethod]]", order.getPaymentMethod().toString());
+        content = content.replace("[[URL]]", "http://localhost/Shopme/orders");
 
         helper.setText(content, true);
         mailSender.send(message);
