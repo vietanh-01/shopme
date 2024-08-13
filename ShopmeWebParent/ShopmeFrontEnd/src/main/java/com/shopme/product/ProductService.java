@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.shopme.common.entity.product.Product;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class ProductService {
 	public static final int PRODUCTS_PER_PAGE = 10;
@@ -39,4 +41,12 @@ public class ProductService {
 
 	}
 
+	public Product getProduct(Integer id) throws ProductNotFoundException {
+		try {
+			Product product = repo.findById(id).get();
+			return product;
+		} catch (NoSuchElementException ex) {
+			throw new ProductNotFoundException("Could not find any product with ID " + id);
+		}
+	}
 }

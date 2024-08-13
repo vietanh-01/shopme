@@ -3,6 +3,10 @@
 <head>
 	<head th:replace="fragments :: page_head(${pageTitle}, 'tag')" />
 	<link rel="stylesheet" th:href="@{/products.css}" />
+	<link th:href="@{/star-rating/css/star-rating.css}" media="all" rel="stylesheet" type="text/css" />
+	<script th:src="@{/star-rating/js/star-rating.js}" type="text/javascript"></script>
+	<link th:href="@{/star-rating/themes/krajee-svg/theme.css}" media="all" rel="stylesheet" type="text/css" />
+	<script th:src="@{/star-rating/themes/krajee-svg/theme.js}"></script>
 </head>
 
 <body>
@@ -28,21 +32,7 @@
 
 	<div class="row">
 		<th:block th:each="product : ${listProducts}">
-			<div class="col-md-2 product-item">
-				<div>
-					<a th:href="@{'/product/' + ${product.alias}}">
-						<img th:src="@{${product.mainImagePath}}" width="150" />
-						<b>[[${product.shortName}]]</b>
-					</a>
-				</div>
-				<div th:if="${product.discountPercent <= 0}">
-					<span>$ [[${product.price}]]</span>
-				</div>
-				<div th:if="${product.discountPercent > 0}">
-					<span style="font-size: larger; color: darkred">$ [[${product.discountPrice}]]</span>
-					<del><span>$ [[${product.price}]]</span></del>
-				</div>
-			</div>
+			<div th:replace="product/product_fragment :: content"></div>
 		</th:block>
 	</div>
 
@@ -50,5 +40,13 @@
 
 	<div th:replace="navigation :: footer_menu"></div>
 </div>
+<script type="text/javascript">
+	$(".product-detail-rating-star").rating({
+		displayOnly: true,
+		hoverOnClera: false,
+		showCaption: false,
+		theme: 'krajee-svg'
+	});
+</script>
 </body>
 </html>

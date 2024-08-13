@@ -2,16 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="content" class="col-sm-2">
-	<div class="product-item">
+	<div>
 		<a th:href="@{'/product/' + ${product.alias}}">
 			<img th:src="@{${product.mainImagePath}}" width="150" />
 			<br/>
-			<b style="color: #333333">[[${product.shortName}]]</b>
+			<b>[[${product.shortName}]]</b>
 		</a>
+	</div>
+	<div>
+		<table>
+			<tr>
+				<td>
+					<input type="text" class="product-detail-rating-star" dir="ltr" data-size="xs"
+						   th:value="${product.averageRating}"/>
+				</td>
+				<td><small>[[${product.reviewCount}]]</small></td>
+			</tr>
+		</table>
 	</div>
 	<div th:replace="product/product_fragment :: product_price"></div>
 </div>
-
 
 <div th:fragment="product_price" th:remove="tag">
 	<th:block th:if="${product.discountPercent &lt;= 0}">

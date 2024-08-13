@@ -3,6 +3,7 @@ package com.shopme.admin.product;
 import com.shopme.admin.paging.PagingAndSortingHelper;
 import com.shopme.common.entity.product.Product;
 import com.shopme.common.exception.ProductNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class ProductService {
 
     public static final int PRODUCTS_PER_PAGE = 5;
@@ -73,8 +75,10 @@ public class ProductService {
         }
 
         product.setUpdatedTime(new Date());
+        Product updatedProduct = repo.save(product);
+        repo.updateReviewCountAndAverageRating(updatedProduct.getId());
 
-        return repo.save(product);
+        return updatedProduct;
     }
 
     public String checkUnique(Integer id, String name) {

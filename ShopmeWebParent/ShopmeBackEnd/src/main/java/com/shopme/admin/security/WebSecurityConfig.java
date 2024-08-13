@@ -40,22 +40,33 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/states/list_by_country/**").hasAnyAuthority("Admin", "Salesperson")
+
                         .requestMatchers("/users/**", "/settings/**", "/countries/**", "/states/**").hasAuthority("Admin")
+
                         .requestMatchers("/categories/**").hasAnyAuthority("Admin", "Editor")
+
                         .requestMatchers("/brands/**").hasAnyAuthority("Admin", "Editor")
 
                         .requestMatchers("/products/new", "/products/delete/**").hasAnyAuthority("Admin", "Editor")
 
                         .requestMatchers("/products/edit/**", "/products/save", "/products/check_unique")
-                        .hasAnyAuthority("Admin", "Editor", "Salesperson")
+                            .hasAnyAuthority("Admin", "Editor", "Salesperson")
 
                         .requestMatchers("/products", "/products/", "/products/detail/**", "/products/page/**")
-                        .hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
+                            .hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
 
                         .requestMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
+
                         .requestMatchers("/orders", "/orders/page/**", "/orders/detail/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
+
                         .requestMatchers("/shipping/**", "/customers/**", "/orders/**", "/get_shipping_cost", "/reports/**").hasAnyAuthority("Admin", "Salesperson")
+
                         .requestMatchers("/orders_shipper/update/**").hasAuthority("Shipper")
+
+                        .requestMatchers("/reviews/**").hasAnyAuthority("Admin", "Assistant")
+
+                        .requestMatchers("/products/detail/**", "/customers/detail/**")
+                            .hasAnyAuthority("Admin", "Editor", "Salesperson", "Assistant")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
