@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.shopme.admin.AmazonS3Util;
+import com.shopme.common.Constants;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,7 @@ public class SettingController {
 		List<Currency> listCurrencies = currencyRepo.findAllByOrderByNameAsc();
 		
 		model.addAttribute("listCurrencies", listCurrencies);
+		model.addAttribute("S3_BASE_URI", Constants.S3_BASE_URI);
 		
 		for (Setting setting : listSettings) {
 			model.addAttribute(setting.getKey(), setting.getValue());
@@ -63,9 +66,12 @@ public class SettingController {
 			String value = "/site-logo/" + fileName;
 			settingBag.updateSiteLogo(value);
 			
-			String uploadDir = "../site-logo/";
-			FileUploadUtil.cleanDir(uploadDir);
-			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+			String uploadDir = "site-logo";
+			AmazonS3Util.removeFolder(uploadDir);
+			AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+
+//			FileUploadUtil.cleanDir(uploadDir);
+//			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		}
 	}
 	

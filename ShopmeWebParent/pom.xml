@@ -25,7 +25,10 @@
 		<module>ShopmeFrontEnd</module>
 	</modules>
 
+
+
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -91,7 +94,9 @@
 			<groupId>com.shopme</groupId>
 			<artifactId>ShopmeCommon</artifactId>
 			<version>0.0.1-SNAPSHOT</version>		
-		</dependency>	
+		</dependency>
+
+
 	</dependencies>
 
 </project>

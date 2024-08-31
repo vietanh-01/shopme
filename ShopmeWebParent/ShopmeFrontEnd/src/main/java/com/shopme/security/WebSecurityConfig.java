@@ -47,18 +47,20 @@ public class WebSecurityConfig{
 	SecurityFilterChain configHttp(HttpSecurity http) throws Exception {
 		http.authenticationProvider(authenticationProvider());
 
-		http.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/account_details", "/update_account_details", "/cart", "/orders/**",
+		http.authorizeHttpRequests(auth ->
+			auth.requestMatchers("/account_details", "/update_account_details", "/cart", "/orders/**",
 						"/address_book/**", "/checkout", "/place_order", "/process_paypal_order", "/reviews/**",
 						"/write_review/**").authenticated()
 				.anyRequest().permitAll()
-		)
+				)
+
 				.formLogin(form -> form
 						.loginPage("/login")
 						.usernameParameter("email")
 						.successHandler(dbLoginHandler)
 						.permitAll()
 				)
+
 				.oauth2Login(oauth2 -> oauth2
 						.loginPage("/login")
 						.userInfoEndpoint(u -> u.userService(oAuth2UserService))
@@ -69,8 +71,8 @@ public class WebSecurityConfig{
 						.key("1234567890_aBcDeFgHiJkLmNoPqRsTuVwXyZ")
 						.tokenValiditySeconds(14 * 24 * 60 * 60))
 						.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-				;
 
+				;
 
 		return http.build();
 	}

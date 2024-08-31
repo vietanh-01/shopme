@@ -1,5 +1,6 @@
 package com.shopme.admin.product;
 
+import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.brand.BrandService;
 import com.shopme.admin.category.CategoryService;
@@ -145,11 +146,14 @@ public class ProductController {
                               RedirectAttributes redirectAttributes) {
         try {
             productService.delete(id);
-            String productExtraImagesDir = "../product-images/" + id + "/extras";
-            String productImagesDir = "../product-images/" + id;
+            String productExtraImagesDir = "product-images/" + id + "/extras";
+            String productImagesDir = "product-images/" + id;
 
-            FileUploadUtil.removeDir(productExtraImagesDir);
-            FileUploadUtil.removeDir(productImagesDir);
+//            FileUploadUtil.removeDir(productExtraImagesDir);
+//            FileUploadUtil.removeDir(productImagesDir);
+
+            AmazonS3Util.removeFolder(productExtraImagesDir);
+            AmazonS3Util.removeFolder(productImagesDir);
 
             redirectAttributes.addFlashAttribute("message",
                     "The product ID " + id + " has been deleted successfully");

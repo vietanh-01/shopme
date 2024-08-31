@@ -1,5 +1,6 @@
 package com.shopme.admin.brand;
 
+import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.category.CategoryService;
 import com.shopme.admin.user.UserService;
@@ -90,10 +91,13 @@ public class BrandController {
             brand.setLogo(fileName);
 
             Brand savedBrand = brandService.saveBrand(brand);
-            String uploadDir = "../brand-logos/" + savedBrand.getId();
+            String uploadDir = "brand-logos/" + savedBrand.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+
+//            FileUploadUtil.cleanDir(uploadDir);
+//            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
         else brandService.saveBrand(brand);
 
@@ -125,8 +129,10 @@ public class BrandController {
                               RedirectAttributes redirectAttributes) {
         try {
             brandService.delete(id);
-            String brandDir = "../brand-logos/" + id;
-            FileUploadUtil.removeDir(brandDir);
+            String brandDir = "brand-logos/" + id;
+            AmazonS3Util.removeFolder(brandDir);
+
+            //FileUploadUtil.removeDir(brandDir);
             redirectAttributes.addFlashAttribute("message",
                     "The brand ID " + id + " has been deleted successfully");
         } catch (BrandNotFoundException e) {

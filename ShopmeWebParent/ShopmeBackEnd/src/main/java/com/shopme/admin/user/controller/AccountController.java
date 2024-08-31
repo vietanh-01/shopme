@@ -1,5 +1,6 @@
 package com.shopme.admin.user.controller;
 
+import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.security.ShopmeUserDetails;
 import com.shopme.admin.user.UserService;
@@ -46,8 +47,12 @@ public class AccountController {
             User savedUser = userService.updateAccount(user);
 
             String uploadDir = "user-photos/" + savedUser.getId();
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+
+//            FileUploadUtil.cleanDir(uploadDir);
+//            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
         else {
             if(user.getPhotos().isEmpty()) user.setPhotos(null);

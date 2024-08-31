@@ -6,6 +6,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -74,7 +75,7 @@ public class WebSecurityConfig {
                         .usernameParameter("email")
                         .permitAll()
                 )
-                .logout(logout -> logout.permitAll())
+                .logout(LogoutConfigurer::permitAll)
                 .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
                         .key("AbcDefgHijKlmnOpqrs_1234567890")
                         .tokenValiditySeconds(24 * 24 * 60 * 60));

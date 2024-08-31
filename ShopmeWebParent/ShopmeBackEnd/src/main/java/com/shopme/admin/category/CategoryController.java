@@ -1,5 +1,6 @@
 package com.shopme.admin.category;
 
+import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.user.UserService;
 import com.shopme.admin.user.export.UserCsvExport;
@@ -85,10 +86,13 @@ public class CategoryController {
             category.setImage(fileName);
 
             Category savedCategory = service.saveCategory(category);
-            String uploadDir = "../category-images/" + savedCategory.getId();
+            String uploadDir = "category-images/" + savedCategory.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+
+//            FileUploadUtil.cleanDir(uploadDir);
+//            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
         else{
             service.saveCategory(category);
@@ -124,8 +128,11 @@ public class CategoryController {
                                  Model model, RedirectAttributes redirectAttributes) {
         try {
             service.delete(id);
-            String catDir = "../category-images/" + id;
-            FileUploadUtil.removeDir(catDir);
+            String catDir = "category-images/" + id;
+
+            AmazonS3Util.removeFolder(catDir);
+
+            //FileUploadUtil.removeDir(catDir);
             redirectAttributes.addFlashAttribute("message",
                     "The Category with Id " + id + " has been delete successfully !");
         }catch (CategoryNotFoundException exception) {

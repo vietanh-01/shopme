@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-
+import com.shopme.common.Constants;
 import jakarta.servlet.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,8 @@ public class SettingFilter implements Filter {
 			//System.out.println(setting);
 			request.setAttribute(setting.getKey(), setting.getValue());
 		});
-		
+
+		request.setAttribute("S3_BASE_URI", Constants.S3_BASE_URI);
 		chain.doFilter(request, response);
 
 	}
