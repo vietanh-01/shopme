@@ -2,6 +2,7 @@ package com.shopme.review;
 
 import java.util.List;
 
+import com.shopme.ControllerHelper;
 import com.shopme.common.entity.product.Product;
 import com.shopme.common.exception.ProductNotFoundException;
 import com.shopme.product.ProductService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.Utility;
@@ -28,6 +30,7 @@ public class ReviewController {
 	@Autowired private ReviewService reviewService;
 	@Autowired private CustomerService customerService;
 	@Autowired private ProductService productService;
+	@Autowired private ControllerHelper controllerHelper;
 
 	@GetMapping("/ratings/{productAlias}")
 	public String listByProductFirstPage(@PathVariable(name = "productAlias") String productAlias, Model model) {
@@ -83,7 +86,7 @@ public class ReviewController {
 	public String listReviewsByCustomerByPage(Model model, HttpServletRequest request,
 							@PathVariable(name = "pageNum") int pageNum,
 							String keyword, String sortField, String sortDir) {
-		Customer customer = getAuthenticatedCustomer(request);
+		Customer customer = controllerHelper.getAuthenticatedCustomer(request);
 		Page<Review> page = reviewService.listByCustomerByPage(customer, keyword, pageNum, sortField, sortDir);		
 		List<Review> listReviews = page.getContent();
 		
@@ -119,7 +122,7 @@ public class ReviewController {
 	@GetMapping("/reviews/detail/{id}")
 	public String viewReview(@PathVariable("id") Integer id, Model model, 
 			RedirectAttributes ra, HttpServletRequest request) {
-		Customer customer = getAuthenticatedCustomer(request);
+		Customer customer = controllerHelper.getAuthenticatedCustomer(request);
 		try {
 			Review review = reviewService.getByCustomerAndId(customer, id);
 			model.addAttribute("review", review);
@@ -145,7 +148,7 @@ public class ReviewController {
 			return "error/404";
 		}
 
-		Customer customer = getAuthenticatedCustomer(request);
+		Customer customer = controllerHelper.getAuthenticatedCustomer(request);
 		boolean customerReviewed = reviewService.didCustomerReviewProduct(customer, product.getId());
 
 		if (customerReviewed) {
@@ -164,6 +167,28 @@ public class ReviewController {
 		model.addAttribute("review", review);
 
 		return "reviews/review_form";
+	}
+
+	@PostMapping("/post_review")
+	public String saveReview(Model model, Review review, Integer productId, HttpServletRequest request) {
+		Customer customer = getAuthenticatedCustomer(request);
+
+		Product product = null;
+
+		try {
+			product = productService.getProduct(productId);
+		} catch (ProductNotFoundException ex) {
+			return "error/404";
+		}
+
+		review.setProduct(product);
+		review.setCustomer(customer);
+
+		Review savedReview = reviewService.save(review);
+
+		model.addAttribute("review", savedReview);
+
+		return "reviews/review_done";
 	}
 
 }

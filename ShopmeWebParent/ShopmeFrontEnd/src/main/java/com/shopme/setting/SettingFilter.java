@@ -8,12 +8,14 @@ import com.shopme.common.Constants;
 import jakarta.servlet.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.shopme.common.entity.setting.Setting;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Component
+@Order(-123) // set the order of this class after the spring security start
 public class SettingFilter implements Filter {
 
 	@Autowired

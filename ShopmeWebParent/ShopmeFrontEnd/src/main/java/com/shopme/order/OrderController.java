@@ -3,6 +3,7 @@ package com.shopme.order;
 import java.util.Iterator;
 import java.util.List;
 
+import com.shopme.ControllerHelper;
 import com.shopme.common.entity.order.OrderDetail;
 import com.shopme.common.entity.product.Product;
 import com.shopme.review.ReviewService;
@@ -25,6 +26,7 @@ public class OrderController {
 	@Autowired private OrderService orderService;
 	@Autowired private CustomerService customerService;
 	@Autowired private ReviewService reviewService;
+	@Autowired private ControllerHelper	controllerHelper;
 	
 	@GetMapping("/orders")
 	public String listFirstPage(Model model, HttpServletRequest request) {
@@ -36,7 +38,7 @@ public class OrderController {
 						@PathVariable(name = "pageNum") int pageNum,
 						String sortField, String sortDir, String orderKeyword
 			) {
-		Customer customer = getAuthenticatedCustomer(request);
+		Customer customer = controllerHelper.getAuthenticatedCustomer(request);
 		
 		Page<Order> page = orderService.listForCustomerByPage(customer, pageNum, sortField, sortDir, orderKeyword);
 		List<Order> listOrders = page.getContent();
@@ -66,7 +68,7 @@ public class OrderController {
 
 	@GetMapping("/orders/detail/{id}")
 	public String viewOrderDetails(Model model, @PathVariable(name = "id") Integer id, HttpServletRequest request) {
-		Customer customer = getAuthenticatedCustomer(request);
+		Customer customer = controllerHelper.getAuthenticatedCustomer(request);
 
 		Order order = orderService.getOrder(id, customer);
 		setProductReviewableStatus(customer, order);
@@ -94,10 +96,7 @@ public class OrderController {
 		}
 	}
 
-	private Customer getAuthenticatedCustomer(HttpServletRequest request) {
-		String email = Utility.getEmailOfAuthenticatedCustomer(request);				
-		return customerService.getCustomerByEmail(email);
-	}
+
 
 
 }

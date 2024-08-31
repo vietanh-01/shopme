@@ -1,5 +1,6 @@
 package com.shopme.order;
 
+import com.shopme.ControllerHelper;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class OrderRestController {
 	
 	@Autowired private OrderService orderService;
 	@Autowired private CustomerService customerService;
+	@Autowired private ControllerHelper controllerHelper;
 	
 	@PostMapping("/orders/return")
 	public ResponseEntity<?> handleOrderReturnRequest(@RequestBody OrderReturnRequest returnRequest,

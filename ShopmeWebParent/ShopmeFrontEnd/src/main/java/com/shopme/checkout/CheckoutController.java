@@ -1,5 +1,6 @@
 package com.shopme.checkout;
 
+import com.shopme.ControllerHelper;
 import com.shopme.Utility;
 import com.shopme.address.AddressService;
 import com.shopme.checkout.paypal.PayPalApiException;
@@ -46,10 +47,11 @@ public class CheckoutController {
     @Autowired private OrderService orderService;
     @Autowired private SettingService settingService;
     @Autowired private PayPalService payPalService;
+    @Autowired private ControllerHelper controllerHelper;
 
     @GetMapping("/checkout")
     public String showCheckouPage(Model model, HttpServletRequest request) {
-        Customer customer = getAuthenticatedCustomer(request);
+        Customer customer = controllerHelper.getAuthenticatedCustomer(request);
 
         Address defaultAddress = addressService.getDefaultAddress(customer);
         ShippingRate shippingRate = null;
@@ -90,7 +92,7 @@ public class CheckoutController {
         String paymentType = request.getParameter("paymentMethod");
         PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentType);
 
-        Customer customer = getAuthenticatedCustomer(request);
+        Customer customer = controllerHelper.getAuthenticatedCustomer(request);
 
         Address defaultAddress = addressService.getDefaultAddress(customer);
         ShippingRate shippingRate = null;
